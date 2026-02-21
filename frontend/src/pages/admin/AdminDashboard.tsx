@@ -71,10 +71,15 @@ export default function AdminDashboard() {
 
   return (
     <div>
-      <h2 className="mb-6 text-2xl font-bold tracking-tight">Admin Dashboard</h2>
+      <h2 className="mb-6 text-2xl font-bold tracking-tight">
+        Admin Dashboard
+      </h2>
       <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
         {cards.map((c) => (
-          <Card key={c.label} className="transition-all hover:shadow-md hover:-translate-y-0.5">
+          <Card
+            key={c.label}
+            className="transition-all hover:shadow-md hover:-translate-y-0.5"
+          >
             <CardHeader className="flex flex-row items-center justify-between pb-2">
               <CardTitle className="text-sm font-medium text-muted-foreground">
                 {c.label}

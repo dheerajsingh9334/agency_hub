@@ -20,11 +20,23 @@ import NotFound from "@/pages/NotFound";
 
 const queryClient = new QueryClient();
 
-function ProtectedRoute({ children, allowedRoles }: { children: React.ReactNode; allowedRoles?: string[] }) {
+function ProtectedRoute({
+  children,
+  allowedRoles,
+}: {
+  children: React.ReactNode;
+  allowedRoles?: string[];
+}) {
   const { user, role, loading } = useAuth();
-  if (loading) return <div className="flex h-screen items-center justify-center">Loading...</div>;
+  if (loading)
+    return (
+      <div className="flex h-screen items-center justify-center">
+        Loading...
+      </div>
+    );
   if (!user) return <Navigate to="/auth" replace />;
-  if (allowedRoles && role && !allowedRoles.includes(role)) return <Navigate to="/" replace />;
+  if (allowedRoles && role && !allowedRoles.includes(role))
+    return <Navigate to="/" replace />;
   return <DashboardLayout>{children}</DashboardLayout>;
 }
 
@@ -38,7 +50,12 @@ function DashboardRouter() {
 
 function AuthGuard() {
   const { user, loading } = useAuth();
-  if (loading) return <div className="flex h-screen items-center justify-center">Loading...</div>;
+  if (loading)
+    return (
+      <div className="flex h-screen items-center justify-center">
+        Loading...
+      </div>
+    );
   if (user) return <Navigate to="/" replace />;
   return <Auth />;
 }
@@ -48,18 +65,76 @@ const App = () => (
     <TooltipProvider>
       <Toaster />
       <Sonner />
-      <BrowserRouter>
+      <BrowserRouter
+        future={{ v7_startTransition: true, v7_relativeSplatPath: true }}
+      >
         <AuthProvider>
           <Routes>
             <Route path="/auth" element={<AuthGuard />} />
-            <Route path="/" element={<ProtectedRoute><DashboardRouter /></ProtectedRoute>} />
-            <Route path="/users" element={<ProtectedRoute allowedRoles={["admin"]}><UsersPage /></ProtectedRoute>} />
-            <Route path="/companies" element={<ProtectedRoute allowedRoles={["admin"]}><CompaniesPage /></ProtectedRoute>} />
-            <Route path="/services" element={<ProtectedRoute allowedRoles={["admin", "client"]}><ServicesPage /></ProtectedRoute>} />
-            <Route path="/service-requests" element={<ProtectedRoute allowedRoles={["admin", "client"]}><ServiceRequestsPage /></ProtectedRoute>} />
-            <Route path="/projects" element={<ProtectedRoute><ProjectsPage /></ProtectedRoute>} />
-            <Route path="/messages" element={<ProtectedRoute><MessagesPage /></ProtectedRoute>} />
-            <Route path="/profile" element={<ProtectedRoute><ProfilePage /></ProtectedRoute>} />
+            <Route
+              path="/"
+              element={
+                <ProtectedRoute>
+                  <DashboardRouter />
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/users"
+              element={
+                <ProtectedRoute allowedRoles={["admin"]}>
+                  <UsersPage />
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/companies"
+              element={
+                <ProtectedRoute allowedRoles={["admin"]}>
+                  <CompaniesPage />
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/services"
+              element={
+                <ProtectedRoute allowedRoles={["admin", "client"]}>
+                  <ServicesPage />
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/service-requests"
+              element={
+                <ProtectedRoute allowedRoles={["admin", "client"]}>
+                  <ServiceRequestsPage />
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/projects"
+              element={
+                <ProtectedRoute>
+                  <ProjectsPage />
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/messages"
+              element={
+                <ProtectedRoute>
+                  <MessagesPage />
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/profile"
+              element={
+                <ProtectedRoute>
+                  <ProfilePage />
+                </ProtectedRoute>
+              }
+            />
             <Route path="*" element={<NotFound />} />
           </Routes>
         </AuthProvider>

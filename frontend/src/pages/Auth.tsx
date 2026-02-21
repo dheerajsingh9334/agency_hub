@@ -95,6 +95,7 @@ export default function Auth() {
                     name="email"
                     type="email"
                     required
+                    autoComplete="email"
                     placeholder="you@example.com"
                   />
                 </div>
@@ -105,6 +106,7 @@ export default function Auth() {
                     name="password"
                     type="password"
                     required
+                    autoComplete="current-password"
                     placeholder="••••••••"
                   />
                 </div>
@@ -121,6 +123,7 @@ export default function Auth() {
                     id="signup-name"
                     name="name"
                     required
+                    autoComplete="name"
                     placeholder="John Doe"
                   />
                 </div>
@@ -131,6 +134,7 @@ export default function Auth() {
                     name="email"
                     type="email"
                     required
+                    autoComplete="email"
                     placeholder="you@example.com"
                   />
                 </div>
@@ -142,6 +146,7 @@ export default function Auth() {
                     type="password"
                     required
                     minLength={6}
+                    autoComplete="new-password"
                     placeholder="••••••••"
                   />
                 </div>

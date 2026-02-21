@@ -12,7 +12,9 @@ export default function ClientDashboard() {
 
   return (
     <div>
-      <h2 className="mb-6 text-2xl font-bold tracking-tight">Client Dashboard</h2>
+      <h2 className="mb-6 text-2xl font-bold tracking-tight">
+        Client Dashboard
+      </h2>
       <div className="grid gap-4 sm:grid-cols-3">
         <Card className="transition-all hover:shadow-md hover:-translate-y-0.5">
           <CardHeader className="flex flex-row items-center justify-between pb-2">
@@ -24,7 +26,9 @@ export default function ClientDashboard() {
             </div>
           </CardHeader>
           <CardContent>
-            <div className="text-3xl font-bold tracking-tight">{stats.projects}</div>
+            <div className="text-3xl font-bold tracking-tight">
+              {stats.projects}
+            </div>
           </CardContent>
         </Card>
         <Card className="transition-all hover:shadow-md hover:-translate-y-0.5">
@@ -37,7 +41,9 @@ export default function ClientDashboard() {
             </div>
           </CardHeader>
           <CardContent>
-            <div className="text-3xl font-bold tracking-tight">{stats.requests}</div>
+            <div className="text-3xl font-bold tracking-tight">
+              {stats.requests}
+            </div>
           </CardContent>
         </Card>
         <Card className="transition-all hover:shadow-md hover:-translate-y-0.5">
@@ -50,7 +56,9 @@ export default function ClientDashboard() {
             </div>
           </CardHeader>
           <CardContent>
-            <div className="text-3xl font-bold tracking-tight">{stats.messages}</div>
+            <div className="text-3xl font-bold tracking-tight">
+              {stats.messages}
+            </div>
           </CardContent>
         </Card>
       </div>
