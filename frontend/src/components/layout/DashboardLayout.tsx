@@ -53,9 +53,11 @@ export default function DashboardLayout({ children }: { children: ReactNode }) {
         "fixed inset-y-0 left-0 z-40 flex w-64 flex-col bg-sidebar text-sidebar-foreground transition-transform md:static md:translate-x-0",
         sidebarOpen ? "translate-x-0" : "-translate-x-full"
       )}>
-        <div className="flex h-16 items-center gap-2 border-b border-sidebar-border px-4">
-          <Building2 className="h-6 w-6 text-sidebar-primary" />
-          <span className="text-sm font-bold">Dheeraj Software</span>
+        <div className="flex h-16 items-center gap-2 border-b border-sidebar-border px-4 bg-sidebar-accent/30">
+          <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-sidebar-primary">
+            <Building2 className="h-4 w-4 text-sidebar-primary-foreground" />
+          </div>
+          <span className="text-sm font-bold tracking-tight">Dheeraj Software</span>
           <Button variant="ghost" size="icon" className="ml-auto md:hidden text-sidebar-foreground" onClick={() => setSidebarOpen(false)}>
             <X className="h-5 w-5" />
           </Button>
@@ -78,8 +80,14 @@ export default function DashboardLayout({ children }: { children: ReactNode }) {
         </nav>
 
         <div className="border-t border-sidebar-border p-3">
-          <div className="mb-2 px-3 text-xs text-sidebar-foreground/50">
-            {profile?.name} • <span className="capitalize">{role}</span>
+          <div className="mb-2 flex items-center gap-2 px-3">
+            <div className="flex h-7 w-7 items-center justify-center rounded-full bg-sidebar-primary text-xs font-bold text-sidebar-primary-foreground">
+              {profile?.name?.charAt(0)?.toUpperCase() || "?"}
+            </div>
+            <div className="min-w-0 flex-1">
+              <div className="truncate text-xs font-medium text-sidebar-foreground">{profile?.name}</div>
+              <div className="text-[10px] capitalize text-sidebar-foreground/50">{role}</div>
+            </div>
           </div>
           <Button
             variant="ghost"
@@ -93,13 +101,13 @@ export default function DashboardLayout({ children }: { children: ReactNode }) {
 
       {/* Main content */}
       <div className="flex flex-1 flex-col overflow-hidden">
-        <header className="flex h-16 items-center gap-4 border-b bg-card px-4 md:px-6">
+        <header className="flex h-16 items-center gap-4 border-b bg-card/80 backdrop-blur-sm px-4 md:px-6 sticky top-0 z-20">
           <Button variant="ghost" size="icon" className="md:hidden" onClick={() => setSidebarOpen(true)}>
             <Menu className="h-5 w-5" />
           </Button>
-          <h1 className="text-lg font-semibold">Dheeraj Software Solutions</h1>
+          <h1 className="text-lg font-semibold tracking-tight">Dheeraj Software Solutions</h1>
         </header>
-        <main className="flex-1 overflow-y-auto p-4 md:p-6">{children}</main>
+        <main className="flex-1 overflow-y-auto p-4 md:p-6 bg-muted/30">{children}</main>
       </div>
     </div>
   );
