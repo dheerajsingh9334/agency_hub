@@ -67,14 +67,18 @@ export default function Auth() {
   };
 
   return (
-    <div className="flex min-h-screen items-center justify-center bg-background px-4">
-      <Card className="w-full max-w-md">
-        <CardHeader className="text-center">
-          <div className="mx-auto mb-2 flex h-12 w-12 items-center justify-center rounded-lg bg-primary">
-            <Building2 className="h-6 w-6 text-primary-foreground" />
+    <div className="flex min-h-screen items-center justify-center bg-gradient-to-br from-primary/10 via-background to-primary/5 px-4">
+      <Card className="w-full max-w-md shadow-xl border-0 bg-card/80 backdrop-blur-sm">
+        <CardHeader className="text-center pb-2">
+          <div className="mx-auto mb-3 flex h-14 w-14 items-center justify-center rounded-xl bg-primary shadow-lg shadow-primary/25">
+            <Building2 className="h-7 w-7 text-primary-foreground" />
           </div>
-          <CardTitle className="text-2xl">Dheeraj Software Solutions</CardTitle>
-          <CardDescription>Company Management Portal</CardDescription>
+          <CardTitle className="text-2xl font-bold tracking-tight">
+            Dheeraj Software Solutions
+          </CardTitle>
+          <CardDescription className="text-muted-foreground">
+            Company Management Portal
+          </CardDescription>
         </CardHeader>
         <CardContent>
           <Tabs defaultValue="login">
