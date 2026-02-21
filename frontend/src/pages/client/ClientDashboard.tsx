@@ -12,39 +12,45 @@ export default function ClientDashboard() {
 
   return (
     <div>
-      <h2 className="mb-6 text-2xl font-bold">Client Dashboard</h2>
+      <h2 className="mb-6 text-2xl font-bold tracking-tight">Client Dashboard</h2>
       <div className="grid gap-4 sm:grid-cols-3">
-        <Card>
+        <Card className="transition-all hover:shadow-md hover:-translate-y-0.5">
           <CardHeader className="flex flex-row items-center justify-between pb-2">
             <CardTitle className="text-sm font-medium text-muted-foreground">
               My Projects
             </CardTitle>
-            <FolderKanban className="h-5 w-5 text-primary" />
+            <div className="rounded-lg bg-blue-50 p-2">
+              <FolderKanban className="h-4 w-4 text-blue-600" />
+            </div>
           </CardHeader>
           <CardContent>
-            <div className="text-3xl font-bold">{stats.projects}</div>
+            <div className="text-3xl font-bold tracking-tight">{stats.projects}</div>
           </CardContent>
         </Card>
-        <Card>
+        <Card className="transition-all hover:shadow-md hover:-translate-y-0.5">
           <CardHeader className="flex flex-row items-center justify-between pb-2">
             <CardTitle className="text-sm font-medium text-muted-foreground">
               Service Requests
             </CardTitle>
-            <FileText className="h-5 w-5 text-warning" />
+            <div className="rounded-lg bg-amber-50 p-2">
+              <FileText className="h-4 w-4 text-amber-600" />
+            </div>
           </CardHeader>
           <CardContent>
-            <div className="text-3xl font-bold">{stats.requests}</div>
+            <div className="text-3xl font-bold tracking-tight">{stats.requests}</div>
           </CardContent>
         </Card>
-        <Card>
+        <Card className="transition-all hover:shadow-md hover:-translate-y-0.5">
           <CardHeader className="flex flex-row items-center justify-between pb-2">
             <CardTitle className="text-sm font-medium text-muted-foreground">
               Messages
             </CardTitle>
-            <MessageSquare className="h-5 w-5 text-muted-foreground" />
+            <div className="rounded-lg bg-cyan-50 p-2">
+              <MessageSquare className="h-4 w-4 text-cyan-600" />
+            </div>
           </CardHeader>
           <CardContent>
-            <div className="text-3xl font-bold">{stats.messages}</div>
+            <div className="text-3xl font-bold tracking-tight">{stats.messages}</div>
           </CardContent>
         </Card>
       </div>
