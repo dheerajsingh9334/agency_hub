@@ -113,7 +113,7 @@ export default function UsersPage() {
   return (
     <div>
       <div className="mb-6 flex items-center justify-between">
-        <h2 className="text-2xl font-bold">Users</h2>
+        <h2 className="text-2xl font-bold tracking-tight">Users</h2>
         <Dialog open={open} onOpenChange={setOpen}>
           <DialogTrigger asChild>
             <Button>
@@ -161,7 +161,7 @@ export default function UsersPage() {
         </Dialog>
       </div>
 
-      <Card>
+      <Card className="overflow-hidden">
         <CardContent className="p-0">
           <Table>
             <TableHeader>
