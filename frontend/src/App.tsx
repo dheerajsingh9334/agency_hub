@@ -17,6 +17,7 @@ import ProfilePage from "@/pages/ProfilePage";
 import EmployeeDashboard from "@/pages/employee/EmployeeDashboard";
 import ClientDashboard from "@/pages/client/ClientDashboard";
 import NotFound from "@/pages/NotFound";
+import { FullPageSpinner } from "@/components/PageLoader";
 
 const queryClient = new QueryClient();
 
@@ -28,12 +29,7 @@ function ProtectedRoute({
   allowedRoles?: string[];
 }) {
   const { user, role, loading } = useAuth();
-  if (loading)
-    return (
-      <div className="flex h-screen items-center justify-center">
-        Loading...
-      </div>
-    );
+  if (loading) return <FullPageSpinner />;
   if (!user) return <Navigate to="/auth" replace />;
   if (allowedRoles && role && !allowedRoles.includes(role))
     return <Navigate to="/" replace />;
@@ -50,12 +46,7 @@ function DashboardRouter() {
 
 function AuthGuard() {
   const { user, loading } = useAuth();
-  if (loading)
-    return (
-      <div className="flex h-screen items-center justify-center">
-        Loading...
-      </div>
-    );
+  if (loading) return <FullPageSpinner />;
   if (user) return <Navigate to="/" replace />;
   return <Auth />;
 }

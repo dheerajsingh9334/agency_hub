@@ -68,7 +68,7 @@ export default function Auth() {
 
   return (
     <div className="flex min-h-screen items-center justify-center bg-gradient-to-br from-primary/10 via-background to-primary/5 px-4">
-      <Card className="w-full max-w-md shadow-xl border-0 bg-card/80 backdrop-blur-sm">
+      <Card className="w-full max-w-md shadow-xl border-0 bg-card/80 backdrop-blur-sm animate-in fade-in slide-in-from-bottom-4 duration-500">
         <CardHeader className="text-center pb-2">
           <div className="mx-auto mb-3 flex h-14 w-14 items-center justify-center rounded-xl bg-primary shadow-lg shadow-primary/25">
             <Building2 className="h-7 w-7 text-primary-foreground" />

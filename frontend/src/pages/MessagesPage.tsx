@@ -6,7 +6,8 @@ import { Input } from "@/components/ui/input";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { cn } from "@/lib/utils";
-import { Send } from "lucide-react";
+import { Send, MessageSquare } from "lucide-react";
+import { MessagesSkeleton, EmptyState } from "@/components/PageLoader";
 
 export default function MessagesPage() {
   const { user } = useAuth();
@@ -14,11 +15,16 @@ export default function MessagesPage() {
   const [selectedContact, setSelectedContact] = useState<string | null>(null);
   const [messages, setMessages] = useState<any[]>([]);
   const [newMessage, setNewMessage] = useState("");
+  const [pageLoading, setPageLoading] = useState(true);
   const scrollRef = useRef<HTMLDivElement>(null);
   const pollRef = useRef<ReturnType<typeof setInterval> | null>(null);
 
   useEffect(() => {
-    api.messages.contacts().then(setContacts).catch(console.error);
+    api.messages
+      .contacts()
+      .then(setContacts)
+      .catch(console.error)
+      .finally(() => setPageLoading(false));
   }, []);
 
   useEffect(() => {
@@ -69,9 +75,11 @@ export default function MessagesPage() {
     }
   };
 
+  if (pageLoading) return <MessagesSkeleton />;
+
   return (
-    <div>
-      <h2 className="mb-6 text-2xl font-bold">Messages</h2>
+    <div className="animate-in fade-in slide-in-from-bottom-4 duration-500">
+      <h2 className="mb-6 text-2xl font-bold tracking-tight">Messages</h2>
       <div className="grid gap-4 md:grid-cols-[300px_1fr]">
         <Card>
           <CardHeader className="pb-2">
@@ -79,21 +87,29 @@ export default function MessagesPage() {
           </CardHeader>
           <CardContent className="p-2">
             <ScrollArea className="h-[500px]">
-              {contacts.map((c) => (
-                <button
-                  key={c.id}
-                  onClick={() => setSelectedContact(c.id)}
-                  className={cn(
-                    "w-full rounded-md px-3 py-2 text-left text-sm transition-colors hover:bg-accent",
-                    selectedContact === c.id && "bg-accent font-medium",
-                  )}
-                >
-                  {c.name}
-                  <span className="block text-xs text-muted-foreground">
-                    {c.email}
-                  </span>
-                </button>
-              ))}
+              {contacts.length === 0 ? (
+                <EmptyState
+                  icon={MessageSquare}
+                  title="No contacts"
+                  description="No users available to message."
+                />
+              ) : (
+                contacts.map((c) => (
+                  <button
+                    key={c.id}
+                    onClick={() => setSelectedContact(c.id)}
+                    className={cn(
+                      "w-full rounded-md px-3 py-2 text-left text-sm transition-colors hover:bg-accent",
+                      selectedContact === c.id && "bg-accent font-medium",
+                    )}
+                  >
+                    {c.name}
+                    <span className="block text-xs text-muted-foreground">
+                      {c.email}
+                    </span>
+                  </button>
+                ))
+              )}
             </ScrollArea>
           </CardContent>
         </Card>

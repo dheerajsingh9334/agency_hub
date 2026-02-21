@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { api } from "@/lib/api";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { DashboardSkeleton } from "@/components/PageLoader";
 import {
   Users,
   Building2,
@@ -8,6 +9,7 @@ import {
   FileText,
   Wrench,
   MessageSquare,
+  TrendingUp,
 } from "lucide-react";
 
 export default function AdminDashboard() {
@@ -19,10 +21,17 @@ export default function AdminDashboard() {
     services: 0,
     messages: 0,
   });
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    api.dashboard.stats().then(setStats).catch(console.error);
+    api.dashboard
+      .stats()
+      .then(setStats)
+      .catch(console.error)
+      .finally(() => setLoading(false));
   }, []);
+
+  if (loading) return <DashboardSkeleton count={6} />;
 
   const cards = [
     {
@@ -70,26 +79,31 @@ export default function AdminDashboard() {
   ];
 
   return (
-    <div>
-      <h2 className="mb-6 text-2xl font-bold tracking-tight">
-        Admin Dashboard
-      </h2>
+    <div className="animate-in fade-in slide-in-from-bottom-4 duration-500">
+      <div className="mb-6 flex items-center gap-2">
+        <TrendingUp className="h-5 w-5 text-primary" />
+        <h2 className="text-2xl font-bold tracking-tight">Admin Dashboard</h2>
+      </div>
       <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
         {cards.map((c) => (
           <Card
             key={c.label}
-            className="transition-all hover:shadow-md hover:-translate-y-0.5"
+            className="group transition-all duration-200 hover:shadow-lg hover:-translate-y-1"
           >
             <CardHeader className="flex flex-row items-center justify-between pb-2">
               <CardTitle className="text-sm font-medium text-muted-foreground">
                 {c.label}
               </CardTitle>
-              <div className={`rounded-lg p-2 ${c.bg}`}>
+              <div
+                className={`rounded-lg p-2.5 ${c.bg} transition-transform duration-200 group-hover:scale-110`}
+              >
                 <c.icon className={`h-4 w-4 ${c.color}`} />
               </div>
             </CardHeader>
             <CardContent>
-              <div className="text-3xl font-bold tracking-tight">{c.value}</div>
+              <div className="text-3xl font-bold tracking-tight tabular-nums">
+                {c.value}
+              </div>
             </CardContent>
           </Card>
         ))}

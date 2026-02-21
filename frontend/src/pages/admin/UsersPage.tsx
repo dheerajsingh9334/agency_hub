@@ -28,7 +28,8 @@ import {
 } from "@/components/ui/dialog";
 import { Badge } from "@/components/ui/badge";
 import { useToast } from "@/hooks/use-toast";
-import { Plus, Trash2 } from "lucide-react";
+import { Plus, Trash2, Users } from "lucide-react";
+import { TableSkeleton, EmptyState } from "@/components/PageLoader";
 
 interface UserRow {
   id: string;
@@ -41,6 +42,7 @@ export default function UsersPage() {
   const [users, setUsers] = useState<UserRow[]>([]);
   const [open, setOpen] = useState(false);
   const [loading, setLoading] = useState(false);
+  const [pageLoading, setPageLoading] = useState(true);
   const [role, setRole] = useState("");
   const { toast } = useToast();
 
@@ -54,6 +56,8 @@ export default function UsersPage() {
         description: err.message,
         variant: "destructive",
       });
+    } finally {
+      setPageLoading(false);
     }
   };
 
@@ -110,8 +114,10 @@ export default function UsersPage() {
     return <Badge className={variants[role] ?? ""}>{role}</Badge>;
   };
 
+  if (pageLoading) return <TableSkeleton rows={5} cols={4} />;
+
   return (
-    <div>
+    <div className="animate-in fade-in slide-in-from-bottom-4 duration-500">
       <div className="mb-6 flex items-center justify-between">
         <h2 className="text-2xl font-bold tracking-tight">Users</h2>
         <Dialog open={open} onOpenChange={setOpen}>
@@ -163,36 +169,44 @@ export default function UsersPage() {
 
       <Card className="overflow-hidden">
         <CardContent className="p-0">
-          <Table>
-            <TableHeader>
-              <TableRow>
-                <TableHead>Name</TableHead>
-                <TableHead>Email</TableHead>
-                <TableHead>Role</TableHead>
-                <TableHead className="w-20">Actions</TableHead>
-              </TableRow>
-            </TableHeader>
-            <TableBody>
-              {users.map((u) => (
-                <TableRow key={u.id}>
-                  <TableCell className="font-medium">{u.name}</TableCell>
-                  <TableCell>{u.email}</TableCell>
-                  <TableCell>{roleBadge(u.role)}</TableCell>
-                  <TableCell>
-                    {u.role !== "admin" && (
-                      <Button
-                        variant="ghost"
-                        size="icon"
-                        onClick={() => handleDelete(u.id)}
-                      >
-                        <Trash2 className="h-4 w-4 text-destructive" />
-                      </Button>
-                    )}
-                  </TableCell>
+          {users.length === 0 ? (
+            <EmptyState
+              icon={Users}
+              title="No users yet"
+              description="Create your first user to get started."
+            />
+          ) : (
+            <Table>
+              <TableHeader>
+                <TableRow>
+                  <TableHead>Name</TableHead>
+                  <TableHead>Email</TableHead>
+                  <TableHead>Role</TableHead>
+                  <TableHead className="w-20">Actions</TableHead>
                 </TableRow>
-              ))}
-            </TableBody>
-          </Table>
+              </TableHeader>
+              <TableBody>
+                {users.map((u) => (
+                  <TableRow key={u.id} className="transition-colors">
+                    <TableCell className="font-medium">{u.name}</TableCell>
+                    <TableCell>{u.email}</TableCell>
+                    <TableCell>{roleBadge(u.role)}</TableCell>
+                    <TableCell>
+                      {u.role !== "admin" && (
+                        <Button
+                          variant="ghost"
+                          size="icon"
+                          onClick={() => handleDelete(u.id)}
+                        >
+                          <Trash2 className="h-4 w-4 text-destructive" />
+                        </Button>
+                      )}
+                    </TableCell>
+                  </TableRow>
+                ))}
+              </TableBody>
+            </Table>
+          )}
         </CardContent>
       </Card>
     </div>

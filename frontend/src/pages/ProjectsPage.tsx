@@ -22,7 +22,8 @@ import {
 } from "@/components/ui/select";
 import { Badge } from "@/components/ui/badge";
 import { useToast } from "@/hooks/use-toast";
-import { Plus, UserPlus, UserMinus } from "lucide-react";
+import { Plus, UserPlus, UserMinus, FolderKanban } from "lucide-react";
+import { ProjectsSkeleton, EmptyState } from "@/components/PageLoader";
 
 export default function ProjectsPage() {
   const { role } = useAuth();
@@ -34,6 +35,7 @@ export default function ProjectsPage() {
   const [selectedProject, setSelectedProject] = useState<string | null>(null);
   const [selectedClient, setSelectedClient] = useState("");
   const [selectedEmployee, setSelectedEmployee] = useState("");
+  const [pageLoading, setPageLoading] = useState(true);
   const { toast } = useToast();
 
   const load = async () => {
@@ -52,6 +54,8 @@ export default function ProjectsPage() {
         description: err.message,
         variant: "destructive",
       });
+    } finally {
+      setPageLoading(false);
     }
   };
 
@@ -137,10 +141,12 @@ export default function ProjectsPage() {
     );
   };
 
+  if (pageLoading) return <ProjectsSkeleton count={3} />;
+
   return (
-    <div>
+    <div className="animate-in fade-in slide-in-from-bottom-4 duration-500">
       <div className="mb-6 flex items-center justify-between">
-        <h2 className="text-2xl font-bold">Projects</h2>
+        <h2 className="text-2xl font-bold tracking-tight">Projects</h2>
         {role === "admin" && (
           <Dialog open={open} onOpenChange={setOpen}>
             <DialogTrigger asChild>
@@ -230,80 +236,92 @@ export default function ProjectsPage() {
       </Dialog>
 
       <div className="space-y-4">
-        {projects.map((p) => (
-          <Card key={p.id}>
-            <CardContent className="p-4">
-              <div className="flex flex-wrap items-center justify-between gap-2">
-                <div>
-                  <h3 className="text-lg font-semibold">{p.name}</h3>
-                  <p className="text-sm text-muted-foreground">
-                    {p.description}
-                  </p>
-                  <p className="mt-1 text-xs text-muted-foreground">
-                    Client: {p.client?.name}
-                  </p>
+        {projects.length === 0 ? (
+          <EmptyState
+            icon={FolderKanban}
+            title="No projects yet"
+            description={
+              role === "admin"
+                ? "Create your first project to get started."
+                : "No projects assigned to you yet."
+            }
+          />
+        ) : (
+          projects.map((p) => (
+            <Card
+              key={p.id}
+              className="transition-all duration-200 hover:shadow-md"
+            >
+              <CardContent className="p-4">
+                <div className="flex flex-wrap items-center justify-between gap-2">
+                  <div>
+                    <h3 className="text-lg font-semibold">{p.name}</h3>
+                    <p className="text-sm text-muted-foreground">
+                      {p.description}
+                    </p>
+                    <p className="mt-1 text-xs text-muted-foreground">
+                      Client: {p.client?.name}
+                    </p>
+                  </div>
+                  <div className="flex items-center gap-2">
+                    {statusBadge(p.status)}
+                    {(role === "admin" || role === "employee") && (
+                      <Select
+                        value={p.status}
+                        onValueChange={(v) => handleStatusUpdate(p.id, v)}
+                      >
+                        <SelectTrigger className="w-36">
+                          <SelectValue />
+                        </SelectTrigger>
+                        <SelectContent>
+                          <SelectItem value="pending">Pending</SelectItem>
+                          <SelectItem value="in_progress">
+                            In Progress
+                          </SelectItem>
+                          <SelectItem value="completed">Completed</SelectItem>
+                        </SelectContent>
+                      </Select>
+                    )}
+                  </div>
                 </div>
-                <div className="flex items-center gap-2">
-                  {statusBadge(p.status)}
-                  {(role === "admin" || role === "employee") && (
-                    <Select
-                      value={p.status}
-                      onValueChange={(v) => handleStatusUpdate(p.id, v)}
-                    >
-                      <SelectTrigger className="w-36">
-                        <SelectValue />
-                      </SelectTrigger>
-                      <SelectContent>
-                        <SelectItem value="pending">Pending</SelectItem>
-                        <SelectItem value="in_progress">In Progress</SelectItem>
-                        <SelectItem value="completed">Completed</SelectItem>
-                      </SelectContent>
-                    </Select>
-                  )}
-                </div>
-              </div>
 
-              <div className="mt-3">
-                <div className="flex items-center gap-2 flex-wrap">
-                  <span className="text-sm font-medium">Team:</span>
-                  {p.employees?.map((a: any) => (
-                    <Badge
-                      key={a.employee.id}
-                      variant="secondary"
-                      className="gap-1"
-                    >
-                      {a.employee.name}
-                      {role === "admin" && (
-                        <button
-                          onClick={() => handleUnassign(p.id, a.employee.id)}
-                          className="ml-1"
-                        >
-                          <UserMinus className="h-3 w-3" />
-                        </button>
-                      )}
-                    </Badge>
-                  ))}
-                  {role === "admin" && (
-                    <Button
-                      variant="outline"
-                      size="sm"
-                      onClick={() => {
-                        setSelectedProject(p.id);
-                        setAssignOpen(true);
-                      }}
-                    >
-                      <UserPlus className="mr-1 h-3 w-3" /> Assign
-                    </Button>
-                  )}
+                <div className="mt-3">
+                  <div className="flex items-center gap-2 flex-wrap">
+                    <span className="text-sm font-medium">Team:</span>
+                    {p.employees?.map((a: any) => (
+                      <Badge
+                        key={a.employee.id}
+                        variant="secondary"
+                        className="gap-1"
+                      >
+                        {a.employee.name}
+                        {role === "admin" && (
+                          <button
+                            onClick={() => handleUnassign(p.id, a.employee.id)}
+                            className="ml-1"
+                          >
+                            <UserMinus className="h-3 w-3" />
+                          </button>
+                        )}
+                      </Badge>
+                    ))}
+                    {role === "admin" && (
+                      <Button
+                        variant="outline"
+                        size="sm"
+                        onClick={() => {
+                          setSelectedProject(p.id);
+                          setAssignOpen(true);
+                        }}
+                      >
+                        <UserPlus className="mr-1 h-3 w-3" /> Assign
+                      </Button>
+                    )}
+                  </div>
                 </div>
-              </div>
-            </CardContent>
-          </Card>
-        ))}
-        {projects.length === 0 && (
-          <p className="text-center text-muted-foreground">
-            No projects found.
-          </p>
+              </CardContent>
+            </Card>
+          ))
         )}
       </div>
     </div>

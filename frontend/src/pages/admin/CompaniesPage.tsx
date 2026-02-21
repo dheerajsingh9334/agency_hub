@@ -20,11 +20,13 @@ import {
   DialogTrigger,
 } from "@/components/ui/dialog";
 import { useToast } from "@/hooks/use-toast";
-import { Plus, Trash2 } from "lucide-react";
+import { Plus, Trash2, Building2 } from "lucide-react";
+import { TableSkeleton, EmptyState } from "@/components/PageLoader";
 
 export default function CompaniesPage() {
   const [companies, setCompanies] = useState<any[]>([]);
   const [open, setOpen] = useState(false);
+  const [pageLoading, setPageLoading] = useState(true);
   const { toast } = useToast();
 
   const load = async () => {
@@ -37,6 +39,8 @@ export default function CompaniesPage() {
         description: err.message,
         variant: "destructive",
       });
+    } finally {
+      setPageLoading(false);
     }
   };
 
@@ -75,10 +79,12 @@ export default function CompaniesPage() {
     }
   };
 
+  if (pageLoading) return <TableSkeleton rows={4} cols={3} />;
+
   return (
-    <div>
+    <div className="animate-in fade-in slide-in-from-bottom-4 duration-500">
       <div className="mb-6 flex items-center justify-between">
-        <h2 className="text-2xl font-bold">Client Companies</h2>
+        <h2 className="text-2xl font-bold tracking-tight">Client Companies</h2>
         <Dialog open={open} onOpenChange={setOpen}>
           <DialogTrigger asChild>
             <Button>
@@ -101,36 +107,44 @@ export default function CompaniesPage() {
           </DialogContent>
         </Dialog>
       </div>
-      <Card>
+      <Card className="overflow-hidden">
         <CardContent className="p-0">
-          <Table>
-            <TableHeader>
-              <TableRow>
-                <TableHead>Name</TableHead>
-                <TableHead>Created</TableHead>
-                <TableHead className="w-20">Actions</TableHead>
-              </TableRow>
-            </TableHeader>
-            <TableBody>
-              {companies.map((c) => (
-                <TableRow key={c.id}>
-                  <TableCell className="font-medium">{c.name}</TableCell>
-                  <TableCell>
-                    {new Date(c.createdAt).toLocaleDateString()}
-                  </TableCell>
-                  <TableCell>
-                    <Button
-                      variant="ghost"
-                      size="icon"
-                      onClick={() => handleDelete(c.id)}
-                    >
-                      <Trash2 className="h-4 w-4 text-destructive" />
-                    </Button>
-                  </TableCell>
+          {companies.length === 0 ? (
+            <EmptyState
+              icon={Building2}
+              title="No companies yet"
+              description="Add your first client company."
+            />
+          ) : (
+            <Table>
+              <TableHeader>
+                <TableRow>
+                  <TableHead>Name</TableHead>
+                  <TableHead>Created</TableHead>
+                  <TableHead className="w-20">Actions</TableHead>
                 </TableRow>
-              ))}
-            </TableBody>
-          </Table>
+              </TableHeader>
+              <TableBody>
+                {companies.map((c) => (
+                  <TableRow key={c.id} className="transition-colors">
+                    <TableCell className="font-medium">{c.name}</TableCell>
+                    <TableCell>
+                      {new Date(c.createdAt).toLocaleDateString()}
+                    </TableCell>
+                    <TableCell>
+                      <Button
+                        variant="ghost"
+                        size="icon"
+                        onClick={() => handleDelete(c.id)}
+                      >
+                        <Trash2 className="h-4 w-4 text-destructive" />
+                      </Button>
+                    </TableCell>
+                  </TableRow>
+                ))}
+              </TableBody>
+            </Table>
+          )}
         </CardContent>
       </Card>
     </div>

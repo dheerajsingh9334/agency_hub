@@ -28,7 +28,8 @@ import {
 import { Label } from "@/components/ui/label";
 import { Badge } from "@/components/ui/badge";
 import { useToast } from "@/hooks/use-toast";
-import { Plus, Check, X } from "lucide-react";
+import { Plus, Check, X, FileText } from "lucide-react";
+import { TableSkeleton, EmptyState } from "@/components/PageLoader";
 
 export default function ServiceRequestsPage() {
   const { role } = useAuth();
@@ -36,6 +37,7 @@ export default function ServiceRequestsPage() {
   const [services, setServices] = useState<any[]>([]);
   const [open, setOpen] = useState(false);
   const [selectedService, setSelectedService] = useState("");
+  const [pageLoading, setPageLoading] = useState(true);
   const { toast } = useToast();
 
   const load = async () => {
@@ -52,6 +54,8 @@ export default function ServiceRequestsPage() {
         description: err.message,
         variant: "destructive",
       });
+    } finally {
+      setPageLoading(false);
     }
   };
 
@@ -113,10 +117,12 @@ export default function ServiceRequestsPage() {
     return <Badge className={map[status] ?? ""}>{status}</Badge>;
   };
 
+  if (pageLoading) return <TableSkeleton rows={4} cols={5} />;
+
   return (
-    <div>
+    <div className="animate-in fade-in slide-in-from-bottom-4 duration-500">
       <div className="mb-6 flex items-center justify-between">
-        <h2 className="text-2xl font-bold">Service Requests</h2>
+        <h2 className="text-2xl font-bold tracking-tight">Service Requests</h2>
         {role === "client" && (
           <Dialog open={open} onOpenChange={setOpen}>
             <DialogTrigger asChild>
@@ -160,55 +166,67 @@ export default function ServiceRequestsPage() {
           </Dialog>
         )}
       </div>
-      <Card>
+      <Card className="overflow-hidden">
         <CardContent className="p-0">
-          <Table>
-            <TableHeader>
-              <TableRow>
-                <TableHead>Service</TableHead>
-                <TableHead>Client</TableHead>
-                <TableHead>Status</TableHead>
-                <TableHead>Date</TableHead>
-                {role === "admin" && <TableHead>Actions</TableHead>}
-              </TableRow>
-            </TableHeader>
-            <TableBody>
-              {requests.map((r) => (
-                <TableRow key={r.id}>
-                  <TableCell className="font-medium">
-                    {r.service?.name}
-                  </TableCell>
-                  <TableCell>{r.client?.name}</TableCell>
-                  <TableCell>{statusBadge(r.status)}</TableCell>
-                  <TableCell>
-                    {new Date(r.createdAt).toLocaleDateString()}
-                  </TableCell>
-                  {role === "admin" && (
-                    <TableCell>
-                      {r.status === "pending" && (
-                        <div className="flex gap-1">
-                          <Button
-                            variant="ghost"
-                            size="icon"
-                            onClick={() => handleApprove(r.id)}
-                          >
-                            <Check className="h-4 w-4 text-success" />
-                          </Button>
-                          <Button
-                            variant="ghost"
-                            size="icon"
-                            onClick={() => handleReject(r.id)}
-                          >
-                            <X className="h-4 w-4 text-destructive" />
-                          </Button>
-                        </div>
-                      )}
-                    </TableCell>
-                  )}
+          {requests.length === 0 ? (
+            <EmptyState
+              icon={FileText}
+              title="No requests yet"
+              description={
+                role === "client"
+                  ? "Submit a service request to get started."
+                  : "No service requests have been made."
+              }
+            />
+          ) : (
+            <Table>
+              <TableHeader>
+                <TableRow>
+                  <TableHead>Service</TableHead>
+                  <TableHead>Client</TableHead>
+                  <TableHead>Status</TableHead>
+                  <TableHead>Date</TableHead>
+                  {role === "admin" && <TableHead>Actions</TableHead>}
                 </TableRow>
-              ))}
-            </TableBody>
-          </Table>
+              </TableHeader>
+              <TableBody>
+                {requests.map((r) => (
+                  <TableRow key={r.id}>
+                    <TableCell className="font-medium">
+                      {r.service?.name}
+                    </TableCell>
+                    <TableCell>{r.client?.name}</TableCell>
+                    <TableCell>{statusBadge(r.status)}</TableCell>
+                    <TableCell>
+                      {new Date(r.createdAt).toLocaleDateString()}
+                    </TableCell>
+                    {role === "admin" && (
+                      <TableCell>
+                        {r.status === "pending" && (
+                          <div className="flex gap-1">
+                            <Button
+                              variant="ghost"
+                              size="icon"
+                              onClick={() => handleApprove(r.id)}
+                            >
+                              <Check className="h-4 w-4 text-success" />
+                            </Button>
+                            <Button
+                              variant="ghost"
+                              size="icon"
+                              onClick={() => handleReject(r.id)}
+                            >
+                              <X className="h-4 w-4 text-destructive" />
+                            </Button>
+                          </div>
+                        )}
+                      </TableCell>
+                    )}
+                  </TableRow>
+                ))}
+              </TableBody>
+            </Table>
+          )}
         </CardContent>
       </Card>
     </div>

@@ -1,51 +1,71 @@
 import { useEffect, useState } from "react";
 import { api } from "@/lib/api";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { FolderKanban, MessageSquare } from "lucide-react";
+import { DashboardSkeleton } from "@/components/PageLoader";
+import { FolderKanban, MessageSquare, TrendingUp } from "lucide-react";
 
 export default function EmployeeDashboard() {
   const [stats, setStats] = useState({ projects: 0, messages: 0 });
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    api.dashboard.stats().then(setStats).catch(console.error);
+    api.dashboard
+      .stats()
+      .then(setStats)
+      .catch(console.error)
+      .finally(() => setLoading(false));
   }, []);
 
+  if (loading) return <DashboardSkeleton count={2} />;
+
+  const cards = [
+    {
+      label: "Assigned Projects",
+      value: stats.projects,
+      icon: FolderKanban,
+      color: "text-blue-600",
+      bg: "bg-blue-50",
+    },
+    {
+      label: "Messages",
+      value: stats.messages,
+      icon: MessageSquare,
+      color: "text-cyan-600",
+      bg: "bg-cyan-50",
+    },
+  ];
+
   return (
-    <div>
-      <h2 className="mb-6 text-2xl font-bold tracking-tight">
-        Employee Dashboard
-      </h2>
+    <div className="animate-in fade-in slide-in-from-bottom-4 duration-500">
+      <div className="mb-6 flex items-center gap-2">
+        <TrendingUp className="h-5 w-5 text-primary" />
+        <h2 className="text-2xl font-bold tracking-tight">
+          Employee Dashboard
+        </h2>
+      </div>
       <div className="grid gap-4 sm:grid-cols-2">
-        <Card className="transition-all hover:shadow-md hover:-translate-y-0.5">
-          <CardHeader className="flex flex-row items-center justify-between pb-2">
-            <CardTitle className="text-sm font-medium text-muted-foreground">
-              Assigned Projects
-            </CardTitle>
-            <div className="rounded-lg bg-blue-50 p-2">
-              <FolderKanban className="h-4 w-4 text-blue-600" />
-            </div>
-          </CardHeader>
-          <CardContent>
-            <div className="text-3xl font-bold tracking-tight">
-              {stats.projects}
-            </div>
-          </CardContent>
-        </Card>
-        <Card className="transition-all hover:shadow-md hover:-translate-y-0.5">
-          <CardHeader className="flex flex-row items-center justify-between pb-2">
-            <CardTitle className="text-sm font-medium text-muted-foreground">
-              Messages
-            </CardTitle>
-            <div className="rounded-lg bg-cyan-50 p-2">
-              <MessageSquare className="h-4 w-4 text-cyan-600" />
-            </div>
-          </CardHeader>
-          <CardContent>
-            <div className="text-3xl font-bold tracking-tight">
-              {stats.messages}
-            </div>
-          </CardContent>
-        </Card>
+        {cards.map((c) => (
+          <Card
+            key={c.label}
+            className="group transition-all duration-200 hover:shadow-lg hover:-translate-y-1"
+          >
+            <CardHeader className="flex flex-row items-center justify-between pb-2">
+              <CardTitle className="text-sm font-medium text-muted-foreground">
+                {c.label}
+              </CardTitle>
+              <div
+                className={`rounded-lg p-2.5 ${c.bg} transition-transform duration-200 group-hover:scale-110`}
+              >
+                <c.icon className={`h-4 w-4 ${c.color}`} />
+              </div>
+            </CardHeader>
+            <CardContent>
+              <div className="text-3xl font-bold tracking-tight tabular-nums">
+                {c.value}
+              </div>
+            </CardContent>
+          </Card>
+        ))}
       </div>
     </div>
   );

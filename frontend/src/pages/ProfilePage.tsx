@@ -7,9 +7,16 @@ import { Label } from "@/components/ui/label";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { useToast } from "@/hooks/use-toast";
+import { ProfileSkeleton } from "@/components/PageLoader";
 
 export default function ProfilePage() {
-  const { profile, role, user, refreshProfile } = useAuth();
+  const {
+    profile,
+    role,
+    user,
+    refreshProfile,
+    loading: authLoading,
+  } = useAuth();
   const [name, setName] = useState(profile?.name ?? "");
   const [loading, setLoading] = useState(false);
   const { toast } = useToast();
@@ -31,8 +38,10 @@ export default function ProfilePage() {
     setLoading(false);
   };
 
+  if (authLoading) return <ProfileSkeleton />;
+
   return (
-    <div className="mx-auto max-w-lg">
+    <div className="mx-auto max-w-lg animate-in fade-in slide-in-from-bottom-4 duration-500">
       <h2 className="mb-6 text-2xl font-bold tracking-tight">Profile</h2>
       <Card className="shadow-sm">
         <CardHeader>

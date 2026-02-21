@@ -21,11 +21,13 @@ import {
   DialogTrigger,
 } from "@/components/ui/dialog";
 import { useToast } from "@/hooks/use-toast";
-import { Plus, Trash2 } from "lucide-react";
+import { Plus, Trash2, Wrench } from "lucide-react";
+import { TableSkeleton, EmptyState } from "@/components/PageLoader";
 
 export default function ServicesPage() {
   const [services, setServices] = useState<any[]>([]);
   const [open, setOpen] = useState(false);
+  const [pageLoading, setPageLoading] = useState(true);
   const { toast } = useToast();
 
   const load = async () => {
@@ -38,6 +40,8 @@ export default function ServicesPage() {
         description: err.message,
         variant: "destructive",
       });
+    } finally {
+      setPageLoading(false);
     }
   };
 
@@ -79,10 +83,12 @@ export default function ServicesPage() {
     }
   };
 
+  if (pageLoading) return <TableSkeleton rows={4} cols={3} />;
+
   return (
-    <div>
+    <div className="animate-in fade-in slide-in-from-bottom-4 duration-500">
       <div className="mb-6 flex items-center justify-between">
-        <h2 className="text-2xl font-bold">Services</h2>
+        <h2 className="text-2xl font-bold tracking-tight">Services</h2>
         <Dialog open={open} onOpenChange={setOpen}>
           <DialogTrigger asChild>
             <Button>
@@ -109,36 +115,44 @@ export default function ServicesPage() {
           </DialogContent>
         </Dialog>
       </div>
-      <Card>
+      <Card className="overflow-hidden">
         <CardContent className="p-0">
-          <Table>
-            <TableHeader>
-              <TableRow>
-                <TableHead>Name</TableHead>
-                <TableHead>Description</TableHead>
-                <TableHead className="w-20">Actions</TableHead>
-              </TableRow>
-            </TableHeader>
-            <TableBody>
-              {services.map((s) => (
-                <TableRow key={s.id}>
-                  <TableCell className="font-medium">{s.name}</TableCell>
-                  <TableCell className="max-w-xs truncate">
-                    {s.description}
-                  </TableCell>
-                  <TableCell>
-                    <Button
-                      variant="ghost"
-                      size="icon"
-                      onClick={() => handleDelete(s.id)}
-                    >
-                      <Trash2 className="h-4 w-4 text-destructive" />
-                    </Button>
-                  </TableCell>
+          {services.length === 0 ? (
+            <EmptyState
+              icon={Wrench}
+              title="No services yet"
+              description="Create your first service offering."
+            />
+          ) : (
+            <Table>
+              <TableHeader>
+                <TableRow>
+                  <TableHead>Name</TableHead>
+                  <TableHead>Description</TableHead>
+                  <TableHead className="w-20">Actions</TableHead>
                 </TableRow>
-              ))}
-            </TableBody>
-          </Table>
+              </TableHeader>
+              <TableBody>
+                {services.map((s) => (
+                  <TableRow key={s.id} className="transition-colors">
+                    <TableCell className="font-medium">{s.name}</TableCell>
+                    <TableCell className="max-w-xs truncate">
+                      {s.description}
+                    </TableCell>
+                    <TableCell>
+                      <Button
+                        variant="ghost"
+                        size="icon"
+                        onClick={() => handleDelete(s.id)}
+                      >
+                        <Trash2 className="h-4 w-4 text-destructive" />
+                      </Button>
+                    </TableCell>
+                  </TableRow>
+                ))}
+              </TableBody>
+            </Table>
+          )}
         </CardContent>
       </Card>
     </div>
