@@ -22,6 +22,7 @@ app.use(
     origin: [
       "http://localhost:8080",
       "http://localhost:5173",
+      "https://agency-hub-wheat.vercel.app/",
       /\.vercel\.app$/,
     ],
     credentials: true,
