@@ -35,28 +35,36 @@ function removeStoredUser() {
   localStorage.removeItem("user");
 }
 
-async function request(endpoint: string, options: RequestInit = {}) {
+async function request(
+  endpoint: string,
+  options: RequestInit = {},
+  skipAuth = false,
+) {
   const token = getToken();
   const headers: Record<string, string> = {
     "Content-Type": "application/json",
     ...((options.headers as Record<string, string>) || {}),
   };
-  if (token) headers["Authorization"] = `Bearer ${token}`;
+  if (token && !skipAuth) headers["Authorization"] = `Bearer ${token}`;
 
   const res = await fetch(`${API_URL}${endpoint}`, {
     ...options,
     headers,
   });
 
-  if (res.status === 401) {
-    removeToken();
-    removeStoredUser();
-    window.location.href = "/auth";
-    throw new Error("Unauthorized");
+  const data = await res.json().catch(() => ({ error: "Network error" }));
+
+  if (!res.ok) {
+    // Only redirect on 401 for authenticated (non-auth) endpoints
+    if (res.status === 401 && !skipAuth) {
+      removeToken();
+      removeStoredUser();
+      // Use a custom event instead of full page reload
+      window.dispatchEvent(new Event("auth:logout"));
+    }
+    throw new Error(data.error || "Request failed");
   }
 
-  const data = await res.json();
-  if (!res.ok) throw new Error(data.error || "Request failed");
   return data;
 }
 
@@ -64,19 +72,27 @@ async function request(endpoint: string, options: RequestInit = {}) {
 export const api = {
   auth: {
     login: async (email: string, password: string) => {
-      const data = await request("/auth/login", {
-        method: "POST",
-        body: JSON.stringify({ email, password }),
-      });
+      const data = await request(
+        "/auth/login",
+        {
+          method: "POST",
+          body: JSON.stringify({ email, password }),
+        },
+        true,
+      );
       setToken(data.token);
       setStoredUser(data.user);
       return data;
     },
     signup: async (email: string, password: string, name: string) => {
-      const data = await request("/auth/signup", {
-        method: "POST",
-        body: JSON.stringify({ email, password, name }),
-      });
+      const data = await request(
+        "/auth/signup",
+        {
+          method: "POST",
+          body: JSON.stringify({ email, password, name }),
+        },
+        true,
+      );
       setToken(data.token);
       setStoredUser(data.user);
       return data;

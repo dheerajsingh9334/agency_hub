@@ -3,6 +3,7 @@ import {
   useContext,
   useEffect,
   useState,
+  useCallback,
   ReactNode,
 } from "react";
 import { api } from "@/lib/api";
@@ -55,9 +56,16 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     setLoading(false);
   };
 
+  // Listen for auth:logout events (401 from API)
+  const handleAuthLogout = useCallback(() => {
+    setUser(null);
+  }, []);
+
   useEffect(() => {
     loadUser();
-  }, []);
+    window.addEventListener("auth:logout", handleAuthLogout);
+    return () => window.removeEventListener("auth:logout", handleAuthLogout);
+  }, [handleAuthLogout]);
 
   const signIn = async (email: string, password: string) => {
     try {
