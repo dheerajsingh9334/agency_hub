@@ -1,0 +1,119 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mongodb"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id        String   @id @default(auto()) @map("_id") @db.ObjectId
+  email     String   @unique
+  password  String
+  name      String
+  role      Role     @default(client)
+  createdAt DateTime @default(now())
+
+  createdCompanies   ClientCompany[]    @relation("CompanyCreator")
+  serviceRequests    ServiceRequest[]   @relation("ClientRequests")
+  clientProjects     Project[]          @relation("ProjectClient")
+  sentMessages       Message[]          @relation("SentMessages")
+  receivedMessages   Message[]          @relation("ReceivedMessages")
+  projectAssignments ProjectEmployee[]
+
+  @@map("users")
+}
+
+model ClientCompany {
+  id        String   @id @default(auto()) @map("_id") @db.ObjectId
+  name      String
+  createdBy String   @db.ObjectId
+  creator   User     @relation("CompanyCreator", fields: [createdBy], references: [id], onDelete: Cascade)
+  createdAt DateTime @default(now())
+
+  @@map("client_companies")
+}
+
+model Service {
+  id          String   @id @default(auto()) @map("_id") @db.ObjectId
+  name        String
+  description String?
+  createdAt   DateTime @default(now())
+
+  serviceRequests ServiceRequest[]
+
+  @@map("services")
+}
+
+model ServiceRequest {
+  id        String        @id @default(auto()) @map("_id") @db.ObjectId
+  serviceId String        @db.ObjectId
+  service   Service       @relation(fields: [serviceId], references: [id])
+  clientId  String        @db.ObjectId
+  client    User          @relation("ClientRequests", fields: [clientId], references: [id])
+  status    RequestStatus @default(pending)
+  createdAt DateTime      @default(now())
+
+  projects Project[]
+
+  @@map("service_requests")
+}
+
+model Project {
+  id               String          @id @default(auto()) @map("_id") @db.ObjectId
+  name             String
+  description      String?
+  clientId         String          @db.ObjectId
+  client           User            @relation("ProjectClient", fields: [clientId], references: [id])
+  status           ProjectStatus   @default(pending)
+  serviceRequestId String?         @db.ObjectId
+  serviceRequest   ServiceRequest? @relation(fields: [serviceRequestId], references: [id])
+  createdAt        DateTime        @default(now())
+
+  employees ProjectEmployee[]
+
+  @@map("projects")
+}
+
+model ProjectEmployee {
+  id         String   @id @default(auto()) @map("_id") @db.ObjectId
+  projectId  String   @db.ObjectId
+  project    Project  @relation(fields: [projectId], references: [id], onDelete: Cascade)
+  employeeId String   @db.ObjectId
+  employee   User     @relation(fields: [employeeId], references: [id], onDelete: Cascade)
+  assignedAt DateTime @default(now())
+
+  @@unique([projectId, employeeId])
+  @@map("project_employees")
+}
+
+model Message {
+  id         String   @id @default(auto()) @map("_id") @db.ObjectId
+  senderId   String   @db.ObjectId
+  sender     User     @relation("SentMessages", fields: [senderId], references: [id])
+  receiverId String   @db.ObjectId
+  receiver   User     @relation("ReceivedMessages", fields: [receiverId], references: [id])
+  content    String
+  createdAt  DateTime @default(now())
+
+  @@map("messages")
+}
+
+enum Role {
+  admin
+  employee
+  client
+}
+
+enum ProjectStatus {
+  pending
+  in_progress
+  completed
+}
+
+enum RequestStatus {
+  pending
+  approved
+  rejected
+}
