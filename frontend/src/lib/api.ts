@@ -98,6 +98,19 @@ export const api = {
       setStoredUser(data.user);
       return data;
     },
+    adminLogin: async (email: string, password: string) => {
+      const data = await request(
+        "/auth/admin/login",
+        {
+          method: "POST",
+          body: JSON.stringify({ email, password }),
+        },
+        true,
+      );
+      setToken(data.token);
+      setStoredUser(data.user);
+      return data;
+    },
     adminRegister: async (data: {
       email: string;
       password: string;

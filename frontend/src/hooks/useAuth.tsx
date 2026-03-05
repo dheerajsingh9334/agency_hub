@@ -28,6 +28,7 @@ interface AuthContextType {
     password: string,
     name: string,
   ) => Promise<{ error: any }>;
+  adminLogin: (email: string, password: string) => Promise<{ error: any }>;
   adminRegister: (data: {
     email: string;
     password: string;
@@ -98,6 +99,16 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     }
   };
 
+  const adminLogin = async (email: string, password: string) => {
+    try {
+      const data = await api.auth.adminLogin(email, password);
+      setUser(data.user);
+      return { error: null };
+    } catch (err: any) {
+      return { error: { message: err.message } };
+    }
+  };
+
   const adminRegister = async (data: {
     email: string;
     password: string;
@@ -149,6 +160,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         loading,
         signIn,
         signUp,
+        adminLogin,
         adminRegister,
         adminSignup,
         signOut,

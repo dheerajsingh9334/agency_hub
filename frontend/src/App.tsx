@@ -6,6 +6,7 @@ import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
 import { AuthProvider, useAuth } from "@/hooks/useAuth";
 import Auth from "@/pages/Auth";
 import AdminRegister from "@/pages/AdminRegister";
+import AdminLogin from "@/pages/AdminLogin";
 import AdminSignupPage from "@/pages/admin/AdminSignupPage";
 import DashboardLayout from "@/components/layout/DashboardLayout";
 import AdminDashboard from "@/pages/admin/AdminDashboard";
@@ -76,6 +77,14 @@ const App = () => (
               element={
                 <PublicRoute>
                   <AdminRegister />
+                </PublicRoute>
+              }
+            />
+            <Route
+              path="/admin/login"
+              element={
+                <PublicRoute>
+                  <AdminLogin />
                 </PublicRoute>
               }
             />

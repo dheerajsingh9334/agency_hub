@@ -80,6 +80,44 @@ router.get("/me", authMiddleware, async (req: AuthRequest, res) => {
   }
 });
 
+// Admin login (only admin role can sign in here)
+router.post("/admin/login", async (req, res) => {
+  try {
+    const { email, password } = req.body;
+
+    if (!email || !password) {
+      return res.status(400).json({ error: "Email and password are required" });
+    }
+
+    const user = await prisma.user.findUnique({ where: { email } });
+    if (!user)
+      return res.status(401).json({ error: "Invalid email or password" });
+
+    if (user.role !== "admin") {
+      return res
+        .status(403)
+        .json({ error: "This login is for admin accounts only" });
+    }
+
+    const valid = await bcrypt.compare(password, user.password);
+    if (!valid)
+      return res.status(401).json({ error: "Invalid email or password" });
+
+    const token = generateToken(user.id, user.role);
+    res.json({
+      token,
+      user: {
+        id: user.id,
+        name: user.name,
+        email: user.email,
+        role: user.role,
+      },
+    });
+  } catch (err: any) {
+    res.status(500).json({ error: err.message });
+  }
+});
+
 // Admin signup (protected - only admins can create other admins)
 router.post("/admin/signup", authMiddleware, async (req: AuthRequest, res) => {
   try {

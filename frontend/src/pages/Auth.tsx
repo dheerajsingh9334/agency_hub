@@ -165,15 +165,24 @@ export default function Auth() {
             </TabsContent>
           </Tabs>
 
-          {/* Admin Registration Link */}
-          <div className="mt-6 pt-4 border-t border-border/50 text-center">
+          {/* Admin Links */}
+          <div className="mt-6 pt-4 border-t border-border/50 text-center space-y-2">
             <Link
-              to="/admin/register"
+              to="/admin/login"
               className="inline-flex items-center gap-2 text-sm text-muted-foreground hover:text-foreground transition-colors"
             >
               <Shield className="h-4 w-4" />
-              <span>Admin Registration</span>
+              <span>Admin Sign In</span>
             </Link>
+            <div>
+              <Link
+                to="/admin/register"
+                className="inline-flex items-center gap-2 text-sm text-muted-foreground hover:text-foreground transition-colors"
+              >
+                <Shield className="h-4 w-4" />
+                <span>Admin Registration</span>
+              </Link>
+            </div>
           </div>
         </CardContent>
       </Card>
