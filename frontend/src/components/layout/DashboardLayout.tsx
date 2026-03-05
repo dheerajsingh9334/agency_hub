@@ -68,11 +68,11 @@ export default function DashboardLayout({ children }: { children: ReactNode }) {
           sidebarOpen ? "translate-x-0 shadow-2xl" : "-translate-x-full",
         )}
       >
-        <div className="flex h-16 items-center gap-2 border-b border-sidebar-border px-4 bg-sidebar-accent/30">
-          <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-sidebar-primary">
-            <Building2 className="h-4 w-4 text-sidebar-primary-foreground" />
+        <div className="flex h-16 items-center gap-2 border-b border-sidebar-border px-4 bg-gradient-gold-rose-light">
+          <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-gradient-gold-rose">
+            <Building2 className="h-4 w-4 text-white" />
           </div>
-          <span className="text-sm font-bold tracking-tight">
+          <span className="text-sm font-bold tracking-tight sidebar-brand">
             Dheeraj Software
           </span>
           <Button
@@ -91,8 +91,8 @@ export default function DashboardLayout({ children }: { children: ReactNode }) {
               key={link.to}
               to={link.to}
               end={link.to === "/"}
-              className="flex items-center gap-3 rounded-md px-3 py-2 text-sm text-sidebar-foreground/70 transition-colors hover:bg-sidebar-accent hover:text-sidebar-foreground"
-              activeClassName="bg-sidebar-accent text-sidebar-foreground font-medium"
+              className="flex items-center gap-3 rounded-md px-3 py-2 text-sm text-sidebar-foreground/70 transition-all hover:bg-gradient-gold-rose-light hover:text-sidebar-foreground border border-transparent hover:border-gold-rose/20"
+              activeClassName="bg-gradient-gold-rose text-white font-medium shadow-gold-rose"
               onClick={() => setSidebarOpen(false)}
             >
               <link.icon className="h-4 w-4" />
@@ -101,23 +101,23 @@ export default function DashboardLayout({ children }: { children: ReactNode }) {
           ))}
         </nav>
 
-        <div className="border-t border-sidebar-border p-3">
+        <div className="border-t border-sidebar-border p-3 bg-gradient-gold-rose-light">
           <div className="mb-2 flex items-center gap-2 px-3">
-            <div className="flex h-7 w-7 items-center justify-center rounded-full bg-sidebar-primary text-xs font-bold text-sidebar-primary-foreground">
+            <div className="flex h-7 w-7 items-center justify-center rounded-full bg-gradient-gold-rose text-xs font-bold text-white shadow-gold-rose">
               {profile?.name?.charAt(0)?.toUpperCase() || "?"}
             </div>
             <div className="min-w-0 flex-1">
               <div className="truncate text-xs font-medium text-sidebar-foreground">
                 {profile?.name}
               </div>
-              <div className="text-[10px] capitalize text-sidebar-foreground/50">
+              <div className="text-[10px] capitalize text-gradient-gold-rose font-semibold">
                 {role}
               </div>
             </div>
           </div>
           <Button
             variant="ghost"
-            className="w-full justify-start gap-2 text-sidebar-foreground/70 hover:bg-sidebar-accent hover:text-sidebar-foreground"
+            className="w-full justify-start gap-2 text-sidebar-foreground/70 hover-gradient-gold-rose border border-transparent hover:border-gold-rose/30"
             onClick={signOut}
           >
             <LogOut className="h-4 w-4" /> Sign Out
@@ -127,16 +127,16 @@ export default function DashboardLayout({ children }: { children: ReactNode }) {
 
       {/* Main content */}
       <div className="flex flex-1 flex-col overflow-hidden">
-        <header className="flex h-16 items-center gap-4 border-b bg-card/80 backdrop-blur-sm px-4 md:px-6 sticky top-0 z-20">
+        <header className="flex h-16 items-center gap-4 border-b bg-gradient-gold-rose-light backdrop-blur-sm px-4 md:px-6 sticky top-0 z-20 border-gold-rose/20">
           <Button
             variant="ghost"
             size="icon"
-            className="md:hidden"
+            className="md:hidden hover-gradient-gold-rose"
             onClick={() => setSidebarOpen(true)}
           >
             <Menu className="h-5 w-5" />
           </Button>
-          <h1 className="text-lg font-semibold tracking-tight">
+          <h1 className="text-lg font-semibold tracking-tight text-gradient-gold-rose">
             Dheeraj Software Solutions
           </h1>
         </header>

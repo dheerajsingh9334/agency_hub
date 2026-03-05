@@ -19,7 +19,7 @@ async function seed() {
   }
 
   // Create admin
-  const adminPassword = await bcrypt.hash("admin123", 10);
+  const adminPassword = await bcrypt.hash("Admin2024!", 10);
   const admin = await prisma.user.create({
     data: {
       email: "admin@dheeraj.com",
@@ -31,7 +31,7 @@ async function seed() {
   console.log("Admin created:", admin.email);
 
   // Create sample employee
-  const empPassword = await bcrypt.hash("employee123", 10);
+  const empPassword = await bcrypt.hash("Employee2024!", 10);
   const employee = await prisma.user.create({
     data: {
       email: "employee@dheeraj.com",
@@ -43,7 +43,7 @@ async function seed() {
   console.log("Employee created:", employee.email);
 
   // Create sample client
-  const clientPassword = await bcrypt.hash("client123", 10);
+  const clientPassword = await bcrypt.hash("Client2024!", 10);
   const client = await prisma.user.create({
     data: {
       email: "client@dheeraj.com",
@@ -74,9 +74,9 @@ async function seed() {
 
   console.log("\nSeed completed successfully!");
   console.log("\nTest Credentials:");
-  console.log("  Admin:    admin@dheeraj.com / admin123");
-  console.log("  Employee: employee@dheeraj.com / employee123");
-  console.log("  Client:   client@dheeraj.com / client123");
+  console.log("  Admin:    admin@dheeraj.com / Admin2024!");
+  console.log("  Employee: employee@dheeraj.com / Employee2024!");
+  console.log("  Client:   client@dheeraj.com / Client2024!");
 }
 
 seed()
