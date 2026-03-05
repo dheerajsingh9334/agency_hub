@@ -9,12 +9,42 @@ const prisma = new PrismaClient();
 async function seed() {
   console.log("Seeding database...");
 
+  // Check for --force flag to update existing passwords
+  const forceReset = process.argv.includes("--force");
+
+  if (forceReset) {
+    console.log("🔄 Force reset - updating existing test user passwords...");
+    const adminPw = await bcrypt.hash("Admin2024!", 10);
+    const empPw = await bcrypt.hash("Employee2024!", 10);
+    const clientPw = await bcrypt.hash("Client2024!", 10);
+
+    await prisma.user.updateMany({
+      where: { email: "admin@dheeraj.com" },
+      data: { password: adminPw },
+    });
+    await prisma.user.updateMany({
+      where: { email: "employee@dheeraj.com" },
+      data: { password: empPw },
+    });
+    await prisma.user.updateMany({
+      where: { email: "client@dheeraj.com" },
+      data: { password: clientPw },
+    });
+
+    console.log("✅ Passwords updated!");
+    console.log("  Admin:    admin@dheeraj.com / Admin2024!");
+    console.log("  Employee: employee@dheeraj.com / Employee2024!");
+    console.log("  Client:   client@dheeraj.com / Client2024!");
+    return;
+  }
+
   // Check if admin exists
   const existingAdmin = await prisma.user.findFirst({
     where: { role: "admin" },
   });
   if (existingAdmin) {
     console.log("Admin already exists, skipping seed.");
+    console.log("💡 Use 'npx tsx src/seed.ts --force' to update passwords");
     return;
   }
 

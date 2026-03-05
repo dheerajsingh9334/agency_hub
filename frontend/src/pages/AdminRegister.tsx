@@ -10,7 +10,7 @@ import { useToast } from "@/hooks/use-toast";
 import { Loader2, UserPlus, Building2, KeyRound } from "lucide-react";
 
 export default function AdminRegister() {
-  const { user, signUp } = useAuth();
+  const { user, adminRegister } = useAuth();
   const { toast } = useToast();
   const [loading, setLoading] = useState(false);
   const [formData, setFormData] = useState({
@@ -27,19 +27,27 @@ export default function AdminRegister() {
     setLoading(true);
 
     try {
-      await signUp({
+      const { error } = await adminRegister({
         name: formData.name,
         email: formData.email,
         password: formData.password,
         adminKey: formData.adminKey,
-        role: "admin",
       });
-      
-      toast({
-        title: "Success!",
-        description: "Admin account created successfully. Please login.",
-        duration: 3000,
-      });
+
+      if (error) {
+        toast({
+          title: "Registration Failed",
+          description: error.message || "Failed to create admin account",
+          variant: "destructive",
+          duration: 4000,
+        });
+      } else {
+        toast({
+          title: "Success!",
+          description: "Admin account created successfully!",
+          duration: 3000,
+        });
+      }
     } catch (error: any) {
       toast({
         title: "Registration Failed",
@@ -145,8 +153,9 @@ export default function AdminRegister() {
               <Alert className="border-gold-rose/30 bg-gradient-gold-rose-light">
                 <KeyRound className="h-4 w-4 text-gradient-gold-rose" />
                 <AlertDescription className="text-sm">
-                  The admin registration key is required to create an admin account. 
-                  Contact your system administrator if you don't have it.
+                  The admin registration key is required to create an admin
+                  account. Contact your system administrator if you don't have
+                  it.
                 </AlertDescription>
               </Alert>
 
@@ -172,8 +181,8 @@ export default function AdminRegister() {
             <div className="mt-6 text-center">
               <p className="text-sm text-muted-foreground">
                 Already have an account?{" "}
-                <Link 
-                  to="/auth" 
+                <Link
+                  to="/auth"
                   className="font-medium text-gradient-gold-rose hover:underline"
                 >
                   Sign in here

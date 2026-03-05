@@ -15,6 +15,7 @@ import {
   FileText,
   Menu,
   X,
+  UserPlus,
 } from "lucide-react";
 import { useState } from "react";
 import { cn } from "@/lib/utils";
@@ -28,6 +29,7 @@ const navByRole = {
     { to: "/service-requests", icon: FileText, label: "Requests" },
     { to: "/projects", icon: FolderKanban, label: "Projects" },
     { to: "/messages", icon: MessageSquare, label: "Messages" },
+    { to: "/admin/signup", icon: UserPlus, label: "Add Admin" },
     { to: "/profile", icon: Settings, label: "Profile" },
   ],
   employee: [

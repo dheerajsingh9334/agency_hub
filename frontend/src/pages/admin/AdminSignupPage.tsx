@@ -6,10 +6,16 @@ import { Label } from "@/components/ui/label";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Alert, AlertDescription } from "@/components/ui/alert";
 import { useToast } from "@/hooks/use-toast";
-import { Loader2, UserPlus, Shield, AlertCircle, CheckCircle } from "lucide-react";
+import {
+  Loader2,
+  UserPlus,
+  Shield,
+  AlertCircle,
+  CheckCircle,
+} from "lucide-react";
 
 export default function AdminSignupPage() {
-  const { signUp } = useAuth();
+  const { adminSignup } = useAuth();
   const { toast } = useToast();
   const [loading, setLoading] = useState(false);
   const [formData, setFormData] = useState({
@@ -23,25 +29,27 @@ export default function AdminSignupPage() {
     setLoading(true);
 
     try {
-      await signUp({
+      const { error } = await adminSignup({
         name: formData.name,
         email: formData.email,
         password: formData.password,
-        role: "admin",
-      });
-      
-      toast({
-        title: "Success!",
-        description: "New admin account created successfully.",
-        duration: 3000,
       });
 
-      // Reset form
-      setFormData({
-        name: "",
-        email: "",
-        password: "",
-      });
+      if (error) {
+        toast({
+          title: "Creation Failed",
+          description: error.message || "Failed to create admin account",
+          variant: "destructive",
+          duration: 4000,
+        });
+      } else {
+        toast({
+          title: "Success!",
+          description: "New admin account created successfully.",
+          duration: 3000,
+        });
+        setFormData({ name: "", email: "", password: "" });
+      }
     } catch (error: any) {
       toast({
         title: "Creation Failed",
@@ -149,7 +157,8 @@ export default function AdminSignupPage() {
                   className="focus:border-gold-rose/50 focus:ring-gold-rose/20"
                 />
                 <p className="text-xs text-muted-foreground">
-                  Password should be at least 6 characters long and include a mix of letters and numbers.
+                  Password should be at least 6 characters long and include a
+                  mix of letters and numbers.
                 </p>
               </div>
 
@@ -175,7 +184,9 @@ export default function AdminSignupPage() {
                 <Button
                   type="button"
                   variant="outline"
-                  onClick={() => setFormData({ name: "", email: "", password: "" })}
+                  onClick={() =>
+                    setFormData({ name: "", email: "", password: "" })
+                  }
                   className="border-gold-rose/30 text-gradient-gold-rose hover:bg-gradient-gold-rose-light"
                 >
                   Clear Form
@@ -188,8 +199,9 @@ export default function AdminSignupPage() {
         <Alert className="mt-6 border-amber-200 bg-amber-50">
           <Shield className="h-4 w-4 text-amber-600" />
           <AlertDescription className="text-amber-800">
-            <strong>Security Note:</strong> New admin accounts will have immediate access to all system functions. 
-            Ensure you trust the individual before creating their admin account.
+            <strong>Security Note:</strong> New admin accounts will have
+            immediate access to all system functions. Ensure you trust the
+            individual before creating their admin account.
           </AlertDescription>
         </Alert>
       </div>

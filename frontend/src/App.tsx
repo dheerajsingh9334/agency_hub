@@ -5,6 +5,8 @@ import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
 import { AuthProvider, useAuth } from "@/hooks/useAuth";
 import Auth from "@/pages/Auth";
+import AdminRegister from "@/pages/AdminRegister";
+import AdminSignupPage from "@/pages/admin/AdminSignupPage";
 import DashboardLayout from "@/components/layout/DashboardLayout";
 import AdminDashboard from "@/pages/admin/AdminDashboard";
 import UsersPage from "@/pages/admin/UsersPage";
@@ -51,6 +53,13 @@ function AuthGuard() {
   return <Auth />;
 }
 
+function PublicRoute({ children }: { children: React.ReactNode }) {
+  const { user, loading } = useAuth();
+  if (loading) return <FullPageSpinner />;
+  if (user) return <Navigate to="/" replace />;
+  return <>{children}</>;
+}
+
 const App = () => (
   <QueryClientProvider client={queryClient}>
     <TooltipProvider>
@@ -62,6 +71,22 @@ const App = () => (
         <AuthProvider>
           <Routes>
             <Route path="/auth" element={<AuthGuard />} />
+            <Route
+              path="/admin/register"
+              element={
+                <PublicRoute>
+                  <AdminRegister />
+                </PublicRoute>
+              }
+            />
+            <Route
+              path="/admin/signup"
+              element={
+                <ProtectedRoute allowedRoles={["admin"]}>
+                  <AdminSignupPage />
+                </ProtectedRoute>
+              }
+            />
             <Route
               path="/"
               element={

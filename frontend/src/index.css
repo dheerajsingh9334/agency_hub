@@ -188,63 +188,83 @@
 /* Dark Gold and Rose Gradient Utilities */
 @layer utilities {
   .bg-gradient-gold-rose {
-    background: linear-gradient(135deg, #B8860B 0%, #B91C1C 100%);
+    background: linear-gradient(135deg, #b8860b 0%, #b91c1c 100%);
   }
-  
+
   .bg-gradient-gold-rose-light {
-    background: linear-gradient(135deg, rgba(184, 134, 11, 0.1) 0%, rgba(185, 28, 28, 0.1) 100%);
+    background: linear-gradient(
+      135deg,
+      rgba(184, 134, 11, 0.1) 0%,
+      rgba(185, 28, 28, 0.1) 100%
+    );
   }
-  
+
   .text-gradient-gold-rose {
-    background: linear-gradient(135deg, #B8860B 0%, #B91C1C 100%);
+    background: linear-gradient(135deg, #b8860b 0%, #b91c1c 100%);
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
     background-clip: text;
   }
-  
+
   .border-gradient-gold-rose {
-    border-image: linear-gradient(135deg, #B8860B 0%, #B91C1C 100%) 1;
+    border-image: linear-gradient(135deg, #b8860b 0%, #b91c1c 100%) 1;
   }
-  
+
   .shadow-gold-rose {
-    box-shadow: 0 4px 20px rgba(184, 134, 11, 0.2), 0 2px 8px rgba(185, 28, 28, 0.1);
+    box-shadow:
+      0 4px 20px rgba(184, 134, 11, 0.2),
+      0 2px 8px rgba(185, 28, 28, 0.1);
   }
-  
+
   .hover-gradient-gold-rose {
     transition: all 0.3s ease;
   }
-  
+
   .hover-gradient-gold-rose:hover {
-    background: linear-gradient(135deg, #B8860B 0%, #B91C1C 100%);
+    background: linear-gradient(135deg, #b8860b 0%, #b91c1c 100%);
     color: white;
     transform: translateY(-1px);
-    box-shadow: 0 6px 25px rgba(184, 134, 11, 0.3), 0 3px 10px rgba(185, 28, 28, 0.2);
+    box-shadow:
+      0 6px 25px rgba(184, 134, 11, 0.3),
+      0 3px 10px rgba(185, 28, 28, 0.2);
   }
-  
+
   /* Role-specific gradient backgrounds */
   .admin-gradient {
-    background: linear-gradient(135deg, #B8860B 0%, #B91C1C 100%);
+    background: linear-gradient(135deg, #b8860b 0%, #b91c1c 100%);
   }
-  
+
   .employee-gradient {
-    background: linear-gradient(135deg, rgba(184, 134, 11, 0.8) 0%, rgba(185, 28, 28, 0.6) 100%);
+    background: linear-gradient(
+      135deg,
+      rgba(184, 134, 11, 0.8) 0%,
+      rgba(185, 28, 28, 0.6) 100%
+    );
   }
-  
+
   .client-gradient {
-    background: linear-gradient(135deg, rgba(184, 134, 11, 0.6) 0%, rgba(185, 28, 28, 0.8) 100%);
+    background: linear-gradient(
+      135deg,
+      rgba(184, 134, 11, 0.6) 0%,
+      rgba(185, 28, 28, 0.8) 100%
+    );
   }
 }
 
 /* Authentication form styling */
 .auth-card {
-  background: linear-gradient(135deg, rgba(184, 134, 11, 0.05) 0%, rgba(185, 28, 28, 0.05) 100%);
+  background: linear-gradient(
+    135deg,
+    rgba(184, 134, 11, 0.05) 0%,
+    rgba(185, 28, 28, 0.05) 100%
+  );
   border: 1px solid rgba(184, 134, 11, 0.2);
   backdrop-filter: blur(10px);
 }
 
 /* Sidebar theming */
 .sidebar-brand {
-  background: linear-gradient(135deg, #B8860B 0%, #B91C1C 100%);
+  background: linear-gradient(135deg, #b8860b 0%, #b91c1c 100%);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   background-clip: text;
@@ -260,20 +280,22 @@
 
 .dashboard-card:hover {
   border-color: rgba(184, 134, 11, 0.3);
-  box-shadow: 0 8px 30px rgba(184, 134, 11, 0.1), 0 4px 15px rgba(185, 28, 28, 0.05);
+  box-shadow:
+    0 8px 30px rgba(184, 134, 11, 0.1),
+    0 4px 15px rgba(185, 28, 28, 0.05);
   transform: translateY(-2px);
 }
 
 /* Button enhancements */
 .btn-primary {
-  background: linear-gradient(135deg, #B8860B 0%, #B91C1C 100%);
+  background: linear-gradient(135deg, #b8860b 0%, #b91c1c 100%);
   color: white;
   border: none;
   transition: all 0.3s ease;
 }
 
 .btn-primary:hover {
-  background: linear-gradient(135deg, #A0750A 0%, #A01B1B 100%);
+  background: linear-gradient(135deg, #a0750a 0%, #a01b1b 100%);
   transform: translateY(-1px);
   box-shadow: 0 6px 25px rgba(184, 134, 11, 0.3);
 }
